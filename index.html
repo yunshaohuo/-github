@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background: #dddddd;
+
+        }
+        .nav{
+            position: relative;
+            width: 400px;
+            height: 500px;
+            border: 5px #28a76c solid;
+            margin: 10px auto;
+        }
+        p{
+            display: inline-block;
+            width: 100%;
+            border-radius: 5px;
+            background: #f6f4f0;
+            cursor: pointer;
+            height: 100%;
+            font-size: 20px;
+        }
+        ul{
+            padding: 0;
+
+            list-style-type: none;
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+            height: 200px;
+            margin: 0px;
+        }
+        li{
+            display: inline-block;
+            width: 300px;
+            height: 30px;
+            margin: 5px 0px;
+
+
+        }
+
+        p{
+            margin: 0px 0px 0px 0px;
+            user-select:none;
+        }
+        span{
+            border-width:5px;
+            border-color: transparent transparent transparent #28a76c;
+            border-style: solid;
+            font-size: 0;
+            position: absolute;
+            top: 450px;
+            left: 2px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="nav">
+    <ul>
+        <li><p>小精通</p></li>
+        <li><p>一些标题，快来写我撒大苏打撒旦</p></li>
+        <li><p>一些标题，快来写我撒旦撒大大</p></li>
+        <li><p>一些标题，快来写我十大啊啊啊</p></li>
+        <span id="span"></span>
+
+    </ul>
+</div>
+<!--&#45;&#45;总体思路-->
+<!--将mousemove限制在指定元素上，触发mousedown在触发mousemove再触发mouseup-->
+<!--触发mousedown事件获取鼠标对应的clientX和clientY,获取元素相对于 static 定位以外的第一个父元素的OffsetLeft和OffsetTop-->
+<!--触发mousemove事件，也获取移动后的鼠标对应的ClientX和ClientY，移动后相对于父元素的left新值应为：Clientx-clientx+offsetLeft-->
+
+<script>
+    var el=document.querySelectorAll("li")
+    var esl=document.querySelector(".nav")
+    var ul=document.querySelector("ul")
+    var ss=document.getElementById("span")
+    var a=[]
+    for(var i=0;i<el.length;i++){
+
+        a.push([el[i].offsetTop,el[i].offsetLeft]);
+        console.log(a)
+            function s(i){
+                setTimeout(function () {
+                el[i].style.position="absolute";
+                el[i].style.top=a[i][0]+'px';
+                el[i].style.left=a[i][1]+'px';
+                el[i].style.margin=0;
+            },0)}
+        s(i)
+    }
+    var toggle=false;
+    var x1,y1,Sx,Sy;
+    ul.addEventListener("mousedown",drag)
+    document.addEventListener("mousemove",drag)
+    esl.addEventListener("mouseup",drag)
+    console.log(esl.offsetLeft)
+    var eslX=esl.offsetLeft
+    var eslY=esl.offsetTop
+    var baoC=null;
+   var index=1;
+    function drag(ev) {
+   switch (ev.type) {
+        case "mousedown":
+            if (ev.target.parentNode.tagName==="LI"){
+                ele=ev.target.parentNode //点中的li 元素
+                ele.style.zIndex=index++;
+                ev.preventDefault()
+                x1=ev.clientX
+                y1=ev.clientY
+                Sx=ele.offsetLeft
+                console.log(" ele.offsetLeft:"+ ele.offsetLeft)
+                console.log(" ele.Left:"+ ele.style.left)
+                Sy=ele.offsetTop
+                // console.log("程序哈按下鼠标————")
+                toggle=true
+            }
+           break;
+       case "mouseup":
+
+
+           if(baoC){
+
+               ele.style.left=baoC.style.left
+               ele.style.top=baoC.style.top
+               baoC.style.left=Sx+'px'
+               baoC.style.top=Sy+'px'
+
+
+           }else if(toggle==true){
+
+
+               ele.style.left=Sx+"px"
+               ele.style.top=Sy+"px"
+               ss.style.top=450+"px"
+               ss.style.left=2+"px"
+
+
+
+
+           }
+           baoC=null
+           toggle=false
+           // console.log("程序哈抬起鼠标键-")
+           break;
+           case "mousemove":
+               if (toggle==true){
+                   var xx=ev.clientX
+                   var yy=ev.clientY
+                   var nowX=Sx+xx-x1
+                   var nowY=Sy+yy-y1
+
+                   ss.style.top=nowY-10+"px"
+                   ele.style.left=nowX+"px"
+                   ele.style.top=nowY+"px"
+                   // console.log("程序哈鼠标移动-")
+                   var xr=ev.clientX-eslX
+                   var yr=ev.clientY-eslY
+                   for(var j=0;j<el.length;j++){
+                       if(ele!=el[j] &&xr>el[j].offsetLeft&&xr<el[j].offsetLeft+300&&yr>el[j].offsetTop&&yr<el[j].offsetTop+30){
+                           console.log("撞成功")
+                           baoC=el[j]
+                       }
+                   }
+
+
+
+   }
+
+   }
+    }
+
+</script>
+</body>
+
+
+
+</html>
