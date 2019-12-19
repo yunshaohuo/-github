@@ -31,14 +31,14 @@
 
             list-style-type: none;
             text-align: center;
-            width: 100%;
+            width: 90%;
             overflow: hidden;
-            height: 200px;
-            margin: 0px;
+            height: 500px;
+            margin: 0px auto;
         }
         li{
             display: inline-block;
-            width: 300px;
+            width: 250px;
             height: 30px;
             margin: 5px 0px;
 
@@ -49,7 +49,7 @@
             margin: 0px 0px 0px 0px;
             user-select:none;
         }
-        span{
+        #span{
             border-width:5px;
             border-color: transparent transparent transparent #28a76c;
             border-style: solid;
@@ -58,16 +58,52 @@
             top: 450px;
             left: 2px;
         }
+        p{
+
+        }
+        li:after{
+            content: "请放入元素";
+            position: absolute;
+            width: 250px;
+            height: 30px;
+            top:0;
+            color: #28a76c;
+            font-style: italic;
+            left: 0px;
+            z-index: -1;
+            text-align: center;
+
+
+        }
+    .ul_li{
+        width: 300px;
+        overflow: hidden;
+        height:38px;
+        border: #28a76c 1px solid;
+    }
+        .xia{
+            border-color: #28a76c transparent transparent transparent;
+            border-width: 4px;
+            border-style: solid;
+            position: absolute;
+            left: 6px;
+            top: 15px;
+        }
+
+
     </style>
 
 </head>
 <body>
 <div class="nav">
     <ul>
-        <li><p>小精通</p></li>
-        <li><p>一些标题，快来写我撒大苏打撒旦</p></li>
-        <li><p>一些标题，快来写我撒旦撒大大</p></li>
-        <li><p>一些标题，快来写我十大啊啊啊</p></li>
+        <div class="ul_li"><li><span></span><p>小精通</p></li></div>
+        <div class="ul_li"><li><span></span><a href=""></a><p>一些标题，快来写我撒大苏</p></li></div>
+        <div class="ul_li"><li><span ></span><a href=""></a><p>一些标题，快来写我撒大大</p></li></div>
+        <div class="ul_li"><li><span ></span><a href=""></a><p>一些标题，快来写我十啊</p></li></div>
+        <div class="ul_li"><li><span ></span><a href=""></a></li></div>
+        <div class="ul_li"><li><span></span><a href=""></a></li></div>
+        <div class="ul_li"><li><span></span><a href=""></a></li></div>
         <span id="span"></span>
 
     </ul>
@@ -82,29 +118,38 @@
     var esl=document.querySelector(".nav")
     var ul=document.querySelector("ul")
     var ss=document.getElementById("span")
-    var a=[]
-    for(var i=0;i<el.length;i++){
+    var beforeStyle=document.querySelectorAll(".ul_li")
 
+    var a=[]
+
+    for(var i=0;i<el.length;i++){
         a.push([el[i].offsetTop,el[i].offsetLeft]);
-        console.log(a)
+
+        // console.log(beforeStyle[0].offsetLeft)
+        // console.log(a)
             function s(i){
                 setTimeout(function () {
                 el[i].style.position="absolute";
                 el[i].style.top=a[i][0]+'px';
                 el[i].style.left=a[i][1]+'px';
-                el[i].style.margin=0;
+                el[i].style.margin='0';
+
+
+
             },0)}
         s(i)
     }
+
     var toggle=false;
-    var x1,y1,Sx,Sy;
+    var x1,y1,Sx,Sy,xw;
     ul.addEventListener("mousedown",drag)
     document.addEventListener("mousemove",drag)
-    esl.addEventListener("mouseup",drag)
+    document.addEventListener("mouseup",drag)
     console.log(esl.offsetLeft)
     var eslX=esl.offsetLeft
     var eslY=esl.offsetTop
     var baoC=null;
+    var liAfter=null;
    var index=1;
     function drag(ev) {
    switch (ev.type) {
@@ -113,6 +158,8 @@
                 ele=ev.target.parentNode //点中的li 元素
                 ele.style.zIndex=index++;
                 ev.preventDefault()
+                xw=ele.offsetWidth
+                console.log("xw:"+xw)
                 x1=ev.clientX
                 y1=ev.clientY
                 Sx=ele.offsetLeft
@@ -125,29 +172,62 @@
            break;
        case "mouseup":
 
+            if(liAfter){
+
+                console.log(liAfter,ele)
+                console.log(liAfter.offsetWidth)
+                ele.style.width=liAfter.offsetWidth+"px"
+                ele.style.left=liAfter.offsetLeft+"px"
+                ele.style.top=liAfter.offsetTop+5+"px"
+                 cr=document.createAttribute("class")
+                cr.value='xia'
+                console.log(liAfter.offsetLeft,liAfter.offsetTop)
+                liAfter.childNodes[0].childNodes[0].setAttributeNode(cr)
+            }
 
            if(baoC){
-
+               console.log(baoC.style.width)
                ele.style.left=baoC.style.left
                ele.style.top=baoC.style.top
                baoC.style.left=Sx+'px'
                baoC.style.top=Sy+'px'
+               baoC.style.border="none"
+               console.log("xw:"+xw)
+               baoC.style.width=ele.style.width
+               ele.style.width=250+"px"
+               console.log(ele.childNodes[0])
+               // 还原
+
+               // if (ele.childNodes[0].className=="class"){ }
+               var get=ele.childNodes[0].getAttributeNode("class")
+                   console.log(ele.childNodes[0])
+                    console.log(baoC.childNodes[0])
+                   var c=ele.childNodes[0].getAttributeNode("class")
+               //删除class
+               if (c){
+                   ele.childNodes[0].removeAttributeNode(c)
+               }
 
 
+               // 被换元素
+            console.log(ele.style.width)
+               console.log(baoC.childNodes[0])
+
+
+
+
+               liAfter=null
            }else if(toggle==true){
-
-
-               ele.style.left=Sx+"px"
-               ele.style.top=Sy+"px"
+               console.log(liAfter.childNodes[0].style.left)
+               // ele.style.left=Sx+"px"
+               // ele.style.top=Sy+"px"
                ss.style.top=450+"px"
                ss.style.left=2+"px"
 
-
-
-
            }
-           baoC=null
            toggle=false
+           baoC=null
+
            // console.log("程序哈抬起鼠标键-")
            break;
            case "mousemove":
@@ -156,17 +236,35 @@
                    var yy=ev.clientY
                    var nowX=Sx+xx-x1
                    var nowY=Sy+yy-y1
-
-                   ss.style.top=nowY-10+"px"
+                    if(nowY-10<495){
+                        ss.style.top=nowY-10+"px"
+                    }else {
+                        ss.style.top=450+"px"
+                        ss.style.left=2+"px"
+                    }
                    ele.style.left=nowX+"px"
                    ele.style.top=nowY+"px"
                    // console.log("程序哈鼠标移动-")
                    var xr=ev.clientX-eslX
                    var yr=ev.clientY-eslY
+                   var lix=x1-xx
+                   var liy=y1-yy
                    for(var j=0;j<el.length;j++){
-                       if(ele!=el[j] &&xr>el[j].offsetLeft&&xr<el[j].offsetLeft+300&&yr>el[j].offsetTop&&yr<el[j].offsetTop+30){
+                       el[j].style.border="none"
+                       beforeStyle[j].style.border="none"
+                       if((ele!=el[j]&&(xr>el[j].offsetLeft&&xr<el[j].offsetLeft+250&&yr>el[j].offsetTop&&yr<el[j].offsetTop+30))){
                            console.log("撞成功")
                            baoC=el[j]
+                           el[j].style.border="1px dotted green"
+                       }
+                       // console.log(Sx-beforeStyle[0].offsetLeft,x1-Sx-esl.offsetLeft,x1,Sx)
+
+                       if (ele!=beforeStyle[j]&&lix<Sx-beforeStyle[j].offsetLeft+10&&lix>beforeStyle[j].offsetLeft&&liy<y1-esl.offsetTop-beforeStyle[j].offsetTop&&liy>0){
+
+                           liAfter=beforeStyle[j]
+                           beforeStyle[j].style.border="1px dotted green"
+                           console.log("撞成功")
+
                        }
                    }
 
